@@ -1,0 +1,35 @@
+@header-height: 50px;
+@sider-width: 200px;
+@footer-height: 60px;
+
+.layout {
+  display: grid;
+  grid-template-columns: @sider-width 1fr 1fr;
+  grid-template-rows: @header-height 1fr @footer-height;
+  grid-template-areas:
+    "header header header"
+    "sider content content"
+    "footer footer footer";
+
+    .layout-header {
+      grid-area: header;
+      // background-color: @primary-color;
+      background-color: #f9f9f9;
+      -webkit-app-region: drag;
+    }
+
+    .layout-sider {
+      grid-area: sider;
+      background-color: @sidebar-bg-color;
+    }
+
+    .layout-content {
+      grid-area: content;
+      background-color: @bg-color;
+    }
+
+    .layout-footer {
+      grid-area: footer;
+      background-color: @bg-color;
+    }
+}

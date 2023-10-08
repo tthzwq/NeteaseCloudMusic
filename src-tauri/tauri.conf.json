@@ -16,6 +16,17 @@
       "shell": {
         "all": false,
         "open": true
+      },
+      "http": {
+        "all": true,
+        "request": true,
+        "scope":[
+          "http://**",
+          "https://**"
+        ]
+      },
+      "window": {
+        "all": true
       }
     },
     "bundle": {
@@ -38,8 +49,13 @@
         "fullscreen": false,
         "resizable": true,
         "title": "netease-cloud-music",
-        "width": 800,
-        "height": 600
+        "width": 1002,
+        "height": 670,
+        "minWidth": 1002,
+        "minHeight": 670,
+        "hiddenTitle": true,
+        "theme": "Light",
+        "titleBarStyle": "Overlay"
       }
     ]
   }

@@ -14,9 +14,6 @@ dependencies:
   overlayscrollbars:
     specifier: ^2.3.2
     version: 2.3.2
-  overlayscrollbars-react:
-    specifier: ^0.5.2
-    version: 0.5.2(overlayscrollbars@2.3.2)(react@18.2.0)
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -29,6 +26,9 @@ dependencies:
   react-router-dom:
     specifier: ^6.16.0
     version: 6.16.0(react-dom@18.2.0)(react@18.2.0)
+  swiper:
+    specifier: ^10.3.1
+    version: 10.3.1
 
 devDependencies:
   '@tauri-apps/cli':
@@ -1273,16 +1273,6 @@ packages:
       wrappy: 1.0.2
     dev: true
 
-  /overlayscrollbars-react@0.5.2(overlayscrollbars@2.3.2)(react@18.2.0):
-    resolution: {integrity: sha512-y3xIPY3to7hneF30MQ/tK9nI6UOcflgenAYktgyfi0GuwnsYEuAqgLfs2qDGiNhFA30Xcz3gaMxvqD7+hTvFRA==}
-    peerDependencies:
-      overlayscrollbars: ^2.0.0
-      react: '>=16.8.0'
-    dependencies:
-      overlayscrollbars: 2.3.2
-      react: 18.2.0
-    dev: false
-
   /overlayscrollbars@2.3.2:
     resolution: {integrity: sha512-K3Sau7NpFruKfXBauvchAQshAW+un1qD8EYNcozrPAB2kbif8C2rqa+1EWvMMWPKl88wgf2rX2QDMLgAfR0hHA==}
     dev: false
@@ -1622,6 +1612,11 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
     dev: true
+
+  /swiper@10.3.1:
+    resolution: {integrity: sha512-24Wk3YUdZHxjc9faID97GTu6xnLNia+adMt6qMTZG/HgdSUt4fS0REsGUXJOgpTED0Amh/j+gRGQxsLayJUlBQ==}
+    engines: {node: '>= 4.7.0'}
+    dev: false
 
   /tailwindcss@3.3.3:
     resolution: {integrity: sha512-A0KgSkef7eE4Mf+nKJ83i75TMyq8HqY3qmFIJSWy8bNt0v1lG7jUcpGpoTFxAwYcWOphcTBLPPJg+bDfhDf52w==}

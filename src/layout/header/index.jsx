@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 import RouteStackControl from "@/components/route-stack-control";
 import NavBar from "@/components/nav-bar";
+import SettingsBar from "./settings-bar";
 
 const Header = memo(({ children }) => {
   return (
@@ -17,6 +18,9 @@ const Header = memo(({ children }) => {
         <div className="absolute top-2/4 left-[230px] -translate-y-[36%]">
           <NavBar />
           {children}
+        </div>
+        <div className="absolute top-2/4 right-3 -translate-y-[36%]">
+          <SettingsBar />
         </div>
       </div>
     </div>

@@ -36,7 +36,7 @@
 
   .swiper-banner-img {
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: all 0.3s;
   }
 
   .swiper-slide-prev,
@@ -45,5 +45,9 @@
     .swiper-banner-img {
       opacity: 1;
     }
+  }
+
+  .swiper-slide:not(.swiper-slide-active) .swiper-banner-img {
+    filter: brightness(50%);
   }
 }

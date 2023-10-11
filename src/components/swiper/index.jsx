@@ -41,12 +41,12 @@ export default function SwiperComponent({ banners }) {
       modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
       onSwiper={handleSwiper}
     >
-      {banners.map((banner, index) => {
+      {banners.map((item, index) => {
         return (
-          <SwiperSlide className="h-[198px]" key={index}>
+          <SwiperSlide className="h-[198px]" key={item.bannerId}>
             <img
               className="swiper-banner-img mx-[auto] rounded-lg h-[198px]"
-              src={banner}
+              src={item.pic}
             />
           </SwiperSlide>
         );

@@ -1,20 +1,18 @@
-use std::collections::HashMap;
 use lazy_static::lazy_static;
 use regex::Regex;
-use urlqstring::QueryParams;
-use serde::{Serialize};
 use serde_json;
+use std::collections::HashMap;
+use urlqstring::QueryParams;
 
+use crate::FormatParams;
 
 use reqwest::header::{
-    CONTENT_TYPE, USER_AGENT, REFERER, CONTENT_ENCODING, COOKIE,
-    HeaderMap, HeaderValue
+    HeaderMap, HeaderValue, CONTENT_ENCODING, CONTENT_TYPE, COOKIE, REFERER, USER_AGENT,
 };
-
 
 use crate::crypto::Crypto;
 
-lazy_static!{
+lazy_static! {
     static ref _CSRF: Regex = Regex::new(r"_csrf=(?P<csrf>[^(;|$)]+)").unwrap();
     static ref DOMAIN: Regex = Regex::new(r#"\s*Domain=[^(;|$)]+;*"#).unwrap();
 }
@@ -96,69 +94,56 @@ const USER_AGENT_LIST: [&str; 14] = [
 //     "3001890046", //云音乐ACG VOCALOID榜
 // ];
 
-pub(crate) async fn generate_response(
+pub(crate) fn generate_response(
     url: &str,
     method: &str,
-    query_params: HashMap<&str,&str>,
-    request_params: HashMap<&str,&str>
-) -> GetParams {
-
-        handle_request(url, method, query_params, request_params).await
+    query_params: HashMap<&str, &str>,
+    request_params: HashMap<&str, &str>,
+) -> FormatParams {
+    handle_request(url, method, query_params, request_params)
 }
 
-#[derive(Serialize)]
-pub(crate) struct GetParams {
-    url: String,
-    headers: Vec<(String, String)>,
-    body: String,
-}
-
-
-async fn handle_request(
+fn handle_request(
     mut url: &str,
     method: &str,
-    query_params: HashMap<&str,&str>,
-    request_params: HashMap<&str,&str>
-) -> GetParams {
+    query_params: HashMap<&str, &str>,
+    request_params: HashMap<&str, &str>,
+) -> FormatParams {
     let crypto = request_params.get("crypto").unwrap();
 
     let mut headers: HeaderMap = HeaderMap::new();
     if crypto == &"linuxapi" {
-        headers.insert(
-            USER_AGENT,
-            LINUX_USER_AGNET.parse().unwrap()
-        );
+        headers.insert(USER_AGENT, LINUX_USER_AGNET.parse().unwrap());
     } else {
         headers.insert(
             USER_AGENT,
-            serde_json::to_value(
-                choose_user_agent(request_params.get("ua").unwrap_or(&""))
-            ).unwrap().as_str().unwrap().parse().unwrap()
+            serde_json::to_value(choose_user_agent(request_params.get("ua").unwrap_or(&"")))
+                .unwrap()
+                .as_str()
+                .unwrap()
+                .parse()
+                .unwrap(),
         );
     }
     if method.to_uppercase() == "POST" {
         headers.insert(
             CONTENT_TYPE,
-            "application/x-www-form-urlencoded".parse().unwrap()
+            "application/x-www-form-urlencoded".parse().unwrap(),
         );
     }
     if url.contains("music.163.com") {
-        headers.insert(
-            REFERER,
-            "https://music.163.com".parse().unwrap()
-        );
+        headers.insert(REFERER, "https://music.163.com".parse().unwrap());
     }
     if let Some(cookie) = request_params.get("cookie") {
-        headers.insert(
-            COOKIE,
-            cookie.parse().unwrap()
-        );
+        headers.insert(COOKIE, cookie.parse().unwrap());
     }
 
     let empty_cookie = HeaderValue::from_static("");
-    let cookie = headers.get(COOKIE)
+    let cookie = headers
+        .get(COOKIE)
         .unwrap_or(&empty_cookie)
-        .to_str().unwrap();
+        .to_str()
+        .unwrap();
 
     let body = match crypto {
         &"weapi" => {
@@ -170,29 +155,38 @@ async fn handle_request(
 
             let mut _params = query_params;
             _params.insert("csrf_token", csrf_token);
-            Crypto::weapi(&QueryParams::from_map( _params ).json())
-        },
+            Crypto::weapi(&QueryParams::from_map(_params).json())
+        }
         &"linuxapi" => {
             let data = format!(
                 r#"{{"method":"{}","url":"{}","params":{}}}"#,
                 method,
                 url.replace("weapi", "api"),
-                QueryParams::from_map(query_params).json());
+                QueryParams::from_map(query_params).json()
+            );
             url = "https://music.163.com/api/linux/forward";
             Crypto::linuxapi(&data)
-        },
-        _ => String::from("")
+        }
+        _ => String::from(""),
     };
     let headers_vec: Vec<(String, String)> = headers
         .iter()
-        .map(|(name, value)| (name.as_str().to_string(), value.to_str().unwrap().to_string()))
+        .map(|(name, value)| {
+            (
+                name.as_str().to_string(),
+                value.to_str().unwrap().to_string(),
+            )
+        })
         .collect();
-    println!("--------body-{:?}", body);
+    println!("-----headers={:?}", headers);
+    println!("-----body={:?}", body);
+    println!("-----url={:?}", url);
 
-    GetParams {
+    FormatParams {
         url: url.to_string(),
+        method: "POST".to_string(),
         headers: headers_vec,
-        body
+        body,
     }
 }
 
@@ -208,4 +202,3 @@ fn choose_user_agent(ua: &str) -> &str {
     };
     USER_AGENT_LIST[index]
 }
-

@@ -6,6 +6,7 @@ use openssl::symm::{ encrypt, Cipher, };
 use openssl::hash::{hash, MessageDigest, DigestBytes};
 use rand::RngCore;
 use rand::rngs::OsRng;
+use rand::Rng;
 use urlqstring::QueryParams;
 use crate::crypto::AesMode::{cbc, ecb};
 
@@ -34,9 +35,13 @@ pub enum AesMode {
 
 impl Crypto {
     pub fn hex_random_bytes(n: usize) -> String {
-        let mut data: Vec<u8> = Vec::with_capacity(n);
-        OsRng.fill_bytes(&mut data);
-        hex::encode(data)
+        let mut rng = rand::thread_rng();
+        let random_bytes: Vec<u8> = (0..n).map(|_| rng.gen::<u8>()).collect();
+        let hex_string: String = random_bytes
+            .iter()
+            .map(|b| format!("{:02x}", b))
+            .collect();
+        hex_string
     }
 
     pub fn eapi(url: &str, text: &str) -> String {

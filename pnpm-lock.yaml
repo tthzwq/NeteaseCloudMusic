@@ -29,6 +29,9 @@ dependencies:
   swiper:
     specifier: ^10.3.1
     version: 10.3.1
+  tauri-plugin-sql-api:
+    specifier: github:tauri-apps/tauri-plugin-sql#v1
+    version: github.com/tauri-apps/tauri-plugin-sql/1c79471feb06366fe1c11cb1cb6c67bcdb80c215
 
 devDependencies:
   '@tauri-apps/cli':
@@ -1753,3 +1756,11 @@ packages:
     resolution: {integrity: sha512-N/lyzTPaJasoDmfV7YTrYCI0G/3ivm/9wdG0aHuheKowWQwGTsK0Eoiw6utmzAnI6pkJa0DUVygvp3spqqEKXg==}
     engines: {node: '>= 14'}
     dev: true
+
+  github.com/tauri-apps/tauri-plugin-sql/1c79471feb06366fe1c11cb1cb6c67bcdb80c215:
+    resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-sql/tar.gz/1c79471feb06366fe1c11cb1cb6c67bcdb80c215}
+    name: tauri-plugin-sql-api
+    version: 0.0.0
+    dependencies:
+      '@tauri-apps/api': 1.5.0
+    dev: false

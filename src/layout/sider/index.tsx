@@ -8,7 +8,7 @@ const Sider = memo(() => {
       label: "login",
       url: "/login",
       acceptFirstMouse: true,
-      alwaysOnTop: false,
+      alwaysOnTop: true,
       center: true,
       width: 350,
       height: 530,

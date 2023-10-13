@@ -42,6 +42,10 @@ const router = createBrowserRouter([
         lazy: () => import("@/views/my/index.jsx"),
       },
     ],
+  },
+  {
+    path: "/login",
+    lazy: () => import("@/views/login/index.jsx"),
   }
 ]);
 

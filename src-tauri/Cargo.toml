@@ -24,6 +24,7 @@ urlqstring = "0.3"
 lazy_static = "1.4"
 hex = "0.4"
 regex = "1.10"
+qrcode = { version = "0.12.0", default-features = false }
 
 [dependencies.tauri-plugin-sql]
 git = "https://github.com/tauri-apps/plugins-workspace"

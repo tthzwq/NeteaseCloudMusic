@@ -1,5 +1,6 @@
 import { Body, fetch } from "@tauri-apps/api/http";
 import { invoke } from "@tauri-apps/api/tauri";
+import { getCookie } from "@/utils/cookie";
 
 const webApiBaseUrl = "http://localhost:3000";
 
@@ -42,36 +43,36 @@ async function tauriRequest({
   method = "GET",
   url,
 }) {
-  // Rust 组装请求参数
-  const result = await invoke("get_params", {
-    options: {
-      method,
-      url,
-      params: tauriFormatParams(params),
-      cookie: "",
-    },
+  const result = await tauriGetRequestOptions({
+    method,
+    url,
+    params: tauriFormatParams(params),
+    cookie: getCookie(),
   });
-  const options = {
-    method: result.method,
-    headers: result.headers.reduce((total, [key, value]) => {
-      total[key] = value;
-      return total;
-    }, {}),
-    body: Body.text(result.body),
-  };
   // 直接调API无跨域，无需部署后端服务
-  return fetch(result.url, options)
-    .then((res) => {
-      console.log(res.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  return fetch(result.url, result.options)
 }
 
-function tauriFormatParams(params) {
+// Rust 组装请求参数
+export async function tauriGetRequestOptions(options = {}) {
+  const result = await invoke("get_params", { options });
+
+  return {
+    url: result.url,
+    options: {
+      method: result.method,
+      headers: result.headers.reduce((total, [key, value]) => {
+        total[key] = value;
+        return total;
+      }, {}),
+      body: Body.text(result.body),
+    }
+  }
+}
+
+export function tauriFormatParams(params) {
   return Object.keys(params).reduce((total, key) => {
-    total.push([key, params[key]]);
+    total.push([key, String(params[key])]);
     return total;
   }, []);
 }

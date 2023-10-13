@@ -876,6 +876,47 @@ pub(crate) fn index_login_cellphone(options: Options) -> FormatParams {
     request_handler(url, "weapi", query_params, &cookies)
 }
 
+// #[get("/login/qr/key")]
+pub(crate) fn index_login_qr_key(options: Options) -> FormatParams {
+    let url = "https://music.163.com/weapi/login/qrcode/unikey";
+    let query_params = json_object!({
+        "type": "1",
+    });
+
+    let cookies = get_cookie_string(options.cookie);
+    request_handler(url, "weapi", query_params, &cookies)
+}
+
+// #[get("/login/qr/create")]
+pub(crate) fn index_login_qr_create(options: Options) -> FormatParams {
+    let query = QueryParams::from(options.params);
+    let codekey = query.value("key").unwrap();
+    let url = &format!("https://music.163.com/login?codekey={}",codekey);
+    let _params = json_object!({});
+    let cookies = get_cookie_string(options.cookie);
+    request_handler(url, "weapi", _params, &cookies)
+}
+
+// #[get("/login/qr/check")]
+pub(crate) fn index_login_qr_check(options: Options) -> FormatParams {
+    let url = "https://music.163.com/weapi/login/qrcode/client/login";
+    let query = QueryParams::from(options.params);
+    let _params = json_object!({
+        "type": "1",
+        "key": query.value("key").unwrap(),
+    });
+    let cookies = get_cookie_string(options.cookie);
+    request_handler(url, "weapi", _params, &cookies)
+}
+
+// #[get("/login/status")]
+pub(crate) fn index_login_status(options: Options) -> FormatParams {
+    let url = "https://music.163.com/weapi/w/nuser/account/get";
+    let _params = json_object!({});
+    let cookies = get_cookie_string(options.cookie);
+    request_handler(url, "weapi", _params, &cookies)
+}
+
 // #[get("/login/refresh")]
 pub(crate) fn index_login_refresh(options: Options) -> FormatParams {
     let url = "https://music.163.com/weapi/login/token/refresh";
@@ -1678,7 +1719,7 @@ pub(crate) fn index_top_artist(options: Options) -> FormatParams {
 pub(crate) fn index_top_list(options: Options) -> FormatParams {
     let url = "https://music.163.com/weapi/v3/playlist/detail";
     let query = QueryParams::from(options.params);
-    static topList: [&str; 37] = [
+    static top_list: [&str; 37] = [
         "3779629",    //云音乐新歌榜
         "3778678",    //云音乐热歌榜
         "2884035",    //云音乐原创榜
@@ -1718,7 +1759,7 @@ pub(crate) fn index_top_list(options: Options) -> FormatParams {
         "3001890046", //云音乐ACG VOCALOID榜
     ];
     let query_params = json_object!({
-        "id": topList[query.value("idx").unwrap_or("0").parse::<usize>().unwrap()],
+        "id": top_list[query.value("idx").unwrap_or("0").parse::<usize>().unwrap()],
         "n": "10000",
     });
     let cookies = get_cookie_string(options.cookie);
@@ -1954,6 +1995,12 @@ pub(crate) fn index_user_record(options: Options) -> FormatParams {
     });
     let cookies = get_cookie_string(options.cookie);
     request_handler(url, "weapi", query_params, &cookies)
+}
+
+// #[get("/user/account")]
+pub(crate) fn index_user_account(options: Options) -> FormatParams {
+    let url = "https://music.163.com/api/nuser/account/get";
+    empty_query_params_handler(url, "weapi", options.cookie)
 }
 
 // #[get("/user/subcount")]

@@ -14,11 +14,9 @@
     "allowlist": {
       "all": false,
       "shell": {
-        "all": false,
         "open": true
       },
       "http": {
-        "all": true,
         "request": true,
         "scope":[
           "http://**",

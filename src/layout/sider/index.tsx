@@ -1,26 +1,43 @@
-import { createWebviewWindow } from "@/utils/window.ts";
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import { focusWindow, getLoginWindow, initLogin } from "@/utils";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchAccountInfo } from "@/store/user";
 
 const Sider = memo(() => {
+  useEffect(() => {
+    dispatch(fetchAccountInfo() as any);
+  }, [])
+
+  const { accountInfo } = useSelector((state: any) => state.user);
+  const dispatch = useDispatch();
   async function handleLogin() {
-    const loginWin = await createWebviewWindow({
-      label: "login",
-      url: "/login",
-      acceptFirstMouse: true,
-      alwaysOnTop: true,
-      center: true,
-      width: 350,
-      height: 530,
-      hiddenTitle: true,
-      resizable: false,
-      skipTaskbar: true,
-      titleBarStyle: "overlay",
+    const loginWindow = getLoginWindow();
+    if (loginWindow) {
+      focusWindow(loginWindow);
+      return;
+    }
+    initLogin().then(() => {
+      dispatch(fetchAccountInfo() as any);
     });
   }
+
   return (
     <div className="pt-[50px] bg-[#ededed]">
-      <button onClick={handleLogin}>login</button>
+      {accountInfo ? (
+        <>
+          <div className="flex items-center">
+            <img
+              className="w-[50px] h-[50px] rounded-full"
+              src={accountInfo.profile.avatarUrl}
+              alt=""
+            />
+            <span className="ml-[10px]">{accountInfo.profile.nickname}</span>
+          </div>
+        </>
+      ) : (
+        <button onClick={handleLogin}>login</button>
+      )}
       <ul>
         <li>
           <NavLink to="/discovery">发现音乐</NavLink>

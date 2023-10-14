@@ -18,16 +18,10 @@ function Card() {
 }
 
 const Recommend = memo((props) => {
-  function aaaa(params) {
-    invoke("greet", {message: "http:://www.baidu.com"}).then((res) => {
-      console.log('+++++++++++', res);
-    })
-  }
   const { banners } = useSelector((state) => state.cache);
 
   return (
     <div className="px-8 py-6">
-      <button onClick={aaaa}>aaaa</button>
       <Swiper banners={banners}></Swiper>
       <div className="py-3">
         <Link className="text-lg font-bold" to="/discovery/playlist">

@@ -1,6 +1,8 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import Api from "@/api/login";
 import { setCookie, openUrl, closeCurrentWindow } from "@/utils";
+import { emit } from '@tauri-apps/api/event'
+import { LOGIN_SUCCESS } from "@/common/constants";
 
 type QRStatusInfo = {
   code?: number;
@@ -116,6 +118,7 @@ const QRLogin = memo(() => {
             .join("; ");
           setCookie(cookie);
           clearInterval(timer.current);
+          emit(LOGIN_SUCCESS, { cookie })
           closeCurrentWindow();
           break;
 

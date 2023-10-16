@@ -11,7 +11,7 @@ export function initLogin() {
     unlistenLoginSuccess && unlistenLoginSuccess();
   }
 
-  const hander = new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const loginWin = await createWebviewWindow({
       label: LOGIN_WINDOW_NAME,
       url: "/login",
@@ -36,12 +36,6 @@ export function initLogin() {
       resolve(payload);
     })
   });
-
-  // @ts-ignore
-  return hander.then((res => res, err => {
-    unlisten();
-    return Promise.reject(err);
-  }))
 }
 
 export function getLoginWindow() {

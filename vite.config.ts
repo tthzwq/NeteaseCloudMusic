@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import { createHtmlPlugin } from 'vite-plugin-html'
 import react from "@vitejs/plugin-react";
 import path from "path";
 
@@ -8,7 +9,7 @@ function resolve(dir) {
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
-  plugins: [react()],
+  plugins: [react(), createHtmlPlugin() ],
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //

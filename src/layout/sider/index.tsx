@@ -1,40 +1,39 @@
-import React, { memo, useEffect } from "react";
+import React, { memo } from "react";
 import { NavLink } from "react-router-dom";
 import { focusWindow, getLoginWindow, initLogin } from "@/utils";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchAccountInfo } from "@/store/user";
+import { fetchAccountInfo, setCookie } from "@/store/user";
+import { useAppSelector, useAppDispatch } from "@/hooks";
 
 const Sider = memo(() => {
-  useEffect(() => {
-    dispatch(fetchAccountInfo() as any);
-  }, [])
-
-  const { accountInfo } = useSelector((state: any) => state.user);
-  const dispatch = useDispatch();
+  const { accountInfo, cookie } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
   async function handleLogin() {
     const loginWindow = getLoginWindow();
     if (loginWindow) {
       focusWindow(loginWindow);
       return;
     }
-    initLogin().then(() => {
-      dispatch(fetchAccountInfo() as any);
+    initLogin().then((res: any) => {
+      dispatch(setCookie(res.cookie));
+      dispatch(fetchAccountInfo());
     });
   }
 
   return (
     <div className="pt-[50px] bg-[#ededed]">
-      {accountInfo ? (
-        <>
-          <div className="flex items-center">
-            <img
-              className="w-[50px] h-[50px] rounded-full"
-              src={accountInfo.profile.avatarUrl}
-              alt=""
-            />
-            <span className="ml-[10px]">{accountInfo.profile.nickname}</span>
-          </div>
-        </>
+      {cookie ? (
+        accountInfo &&
+        accountInfo.profile && (
+          <>
+            <div className="flex items-center">
+              <img
+                className="w-11 h-11 rounded-full"
+                src={accountInfo.profile.avatarUrl}
+              />
+              <span className="ml-[10px]">{accountInfo.profile.nickname}</span>
+            </div>
+          </>
+        )
       ) : (
         <button onClick={handleLogin}>login</button>
       )}

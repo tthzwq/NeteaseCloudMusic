@@ -1,3 +1,4 @@
+import { getBanners, getPersonalized } from '@/api'
 import {
   createSlice,
   createAsyncThunk,
@@ -6,31 +7,37 @@ import {
 
 const initialState = {
   banners: [],
+  personalizedPlaylist: [],
 }
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-// Thunk functions
-export const fetchData = createAsyncThunk('cache/fetchData', async () => {
-  await sleep(1000)
-  return []
+
+export const fetchRecommendData = createAsyncThunk('cache/fetchRecommendData', async () => {
+  const data = {}
+  const fetchList = [
+    getBanners().then(res => data['banners'] = res.data.banners),
+    getPersonalized().then(res => data['personalizedPlaylist'] = res.data.result),
+  ]
+  await Promise.allSettled(fetchList)
+  return data
 })
 
 const cacheSlice = createSlice({
   name: 'cache',
   initialState,
   reducers: {
-    setBanners(state, action) {
-      console.log('setBanners', action);
-      const newList = action.payload;
-      state.banners = newList;
-    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchRecommendData.fulfilled, (state, { payload }) => {
+      Object.assign(state, payload)
+    })
   },
 })
 
-export const { setBanners } = cacheSlice.actions
+export const { } = cacheSlice.actions
 
 export default cacheSlice.reducer
 

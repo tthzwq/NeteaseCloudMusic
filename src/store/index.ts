@@ -1,13 +1,22 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import cacheReducer from './cache'
 import userReducer from './user'
 import persist, { setInitialState } from "./middleware/persist"
 
+const reducers = combineReducers({
+  cache: cacheReducer,
+  user: userReducer,
+})
+
+function reducer(state:any, action:any) {
+  if (action.type === 'INITIAL_STATE_LOADED') {
+    return action.payload
+  }
+  return reducers(state, action)
+}
+
 const store = configureStore({
-  reducer: {
-    cache: cacheReducer,
-    user: userReducer,
-  },
+  reducer,
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(persist),
 })
 

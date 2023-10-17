@@ -1,4 +1,6 @@
-import React, { memo } from 'react'
+import React, { memo, useEffect } from 'react'
+import { fetchRecommendData } from '@/store/cache'
+import { useAppDispatch } from '@/hooks'
 
 import Content from "./content"
 import Footer from "./footer"
@@ -6,6 +8,10 @@ import Header from "./header"
 import Sider from "./sider"
 
 const Layout = memo(() => {
+  const dispatch = useAppDispatch();
+  useEffect(() =>{
+    dispatch(fetchRecommendData())
+  }, [])
   return (
     <div className='relative grid grid-cols-[200px_1fr] grid-rows-[1fr_60px] w-full h-full m-0 p-0 overflow-hidden'>
       <Header />

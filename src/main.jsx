@@ -14,3 +14,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   </Provider>
   // </React.StrictMode>,
 );
+
+// 阻止鼠标右键默认事件
+const allowTags = ["INPUT", "TEXTAREA"];
+document.addEventListener("contextmenu", (e) => {
+  if (allowTags.includes(e.target.tagName)) return;
+  e.preventDefault();
+});

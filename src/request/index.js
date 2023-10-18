@@ -33,7 +33,10 @@ async function request({
       },
       ...(!["GET", "HEAD"].includes(method) && { body: JSON.stringify(data) }),
     })
-    .then((response) => response.json());
+    .then(async (response) => {
+      response.data = await response.json();
+      return response;
+    });
 }
 
 async function tauriRequest({

@@ -4,6 +4,11 @@ import { focusWindow, getLoginWindow, initLogin } from "@/utils";
 import { fetchAccountInfo, setCookie } from "@/store/user";
 import { useAppSelector, useAppDispatch } from "@/hooks";
 
+const links = [
+  { to: "/discovery", title: "发现音乐", icon: "music" },
+  { to: "/my", title: "我喜欢的音乐", icon: "like" },
+];
+
 const Sider = memo(() => {
   const { accountInfo, cookie } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
@@ -21,7 +26,6 @@ const Sider = memo(() => {
   useEffect(() => {
     cookie && dispatch(fetchAccountInfo());
   }, []);
-
 
   async function handleLogin() {
     if (cookie) return;
@@ -51,12 +55,26 @@ const Sider = memo(() => {
         </div>
       </div>
       <ul>
-        <li>
-          <NavLink to="/discovery">发现音乐</NavLink>
-        </li>
-        <li>
-          <NavLink to="/my">我喜欢的音乐</NavLink>
-        </li>
+        {links.map((item) => {
+          return (
+            <li key={item.to}>
+              <NavLink
+                to={item.to}
+                className={({ isActive }) => {
+                  return (
+                    (isActive ? "text-primary active" : "text-ct") +
+                    " group/navlink"
+                  );
+                }}
+              >
+                <div className="flex items-center px-6 py-2 group-hover/navlink:bg-ctd/10 group-[.active]/navlink:bg-ctd/10">
+                  <i className={`iconfont icon-${item.icon} text-xl`}></i>
+                  <span className="ml-1">{item.title}</span>
+                </div>
+              </NavLink>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

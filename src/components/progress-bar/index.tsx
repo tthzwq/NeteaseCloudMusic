@@ -1,4 +1,3 @@
-import { on } from "events";
 import React, { memo, useState, useCallback, useRef, useEffect } from "react";
 
 interface ProgressBarProps {
@@ -9,24 +8,26 @@ interface ProgressBarProps {
   onChange?: (percent: number) => void;
   barWidth?: string;
   pointSize?: string;
+  alwaysPoint?: boolean;
 }
 
 const ProgressBar: React.FC<ProgressBarProps> = memo(
   ({
     vertical = false,
     round = false,
+    alwaysPoint = false,
     percent,
     onInput = () => {},
     onChange = () => {},
     barWidth = "2px",
-    pointSize = "10px",
+    pointSize = "12px",
   }) => {
     const progressBarRef = useRef<HTMLDivElement | null>(null);
-    const handleRef = useRef<HTMLDivElement | null>(null);
     const [progress, setProgress] = useState<number>(() =>
       Math.min(100, Math.max(0, percent))
     );
     const [isDragging, setDragging] = useState(false);
+    const startPoint = useRef< DOMRect| null>();
 
     useEffect(() => {
       if (!isDragging) {
@@ -36,20 +37,19 @@ const ProgressBar: React.FC<ProgressBarProps> = memo(
 
     const handleMouseMove = useCallback(
       (e: MouseEvent) => {
-        if (!isDragging || !progressBarRef.current || !handleRef.current)
+        if (!isDragging || !startPoint.current)
           return;
 
-        const progressBarRect = progressBarRef.current.getBoundingClientRect();
-        const handleRect = handleRef.current.getBoundingClientRect();
+        const start = startPoint.current
 
         let newPercent: number;
 
         if (vertical) {
-          const offsetY = progressBarRect.bottom - e.clientY;
-          newPercent = (offsetY / progressBarRect.height) * 100;
+          const offsetY = start.bottom - e.clientY;
+          newPercent = (offsetY / start.height) * 100;
         } else {
-          const offsetX = e.clientX - progressBarRect.left;
-          newPercent = (offsetX / progressBarRect.width) * 100;
+          const offsetX = e.clientX - start.left;
+          newPercent = (offsetX / start.width) * 100;
         }
         newPercent = Math.min(
           100,
@@ -69,20 +69,22 @@ const ProgressBar: React.FC<ProgressBarProps> = memo(
     }
 
     function handleMouseDown() {
+      if (progressBarRef.current) {
+        startPoint.current = progressBarRef.current.getBoundingClientRect()
+      }
       setDragging(true);
     }
 
     function handleClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
       if (!progressBarRef.current) return;
       const progressBarRect = progressBarRef.current.getBoundingClientRect();
-      const targetRect = e.currentTarget.getBoundingClientRect();
 
       let newPercent: number;
       if (vertical) {
-        const offsetY = targetRect.top + targetRect.height - e.clientY;
-        newPercent = (offsetY / targetRect.height) * 100;
+        const offsetY = progressBarRect.top + progressBarRect.height - e.clientY;
+        newPercent = (offsetY / progressBarRect.height) * 100;
       } else {
-        const offsetX = e.clientX - targetRect.left;
+        const offsetX = e.clientX - progressBarRect.left;
         newPercent = (offsetX / progressBarRect.width) * 100;
       }
       newPercent = Math.min(
@@ -123,7 +125,7 @@ const ProgressBar: React.FC<ProgressBarProps> = memo(
           }}
         ></div>
         <div
-          className="absolute top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+          className="group/progress absolute top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 cursor-pointer"
           style={{
             width: vertical ? pointSize : "100%",
             height: vertical ? "100%" : pointSize,
@@ -131,14 +133,14 @@ const ProgressBar: React.FC<ProgressBarProps> = memo(
           onClick={handleClick}
         >
           <div
-            className="absolute bg-primary rounded-full cursor-grab"
-            ref={handleRef}
+            className="absolute bg-primary rounded-full cursor-grab hidden group-hover/progress:inline-block"
             style={{
               width: pointSize,
               height: pointSize,
               transform: vertical ? `translateY(50%)` : `translateX(-50%)`,
               left: vertical ? "0" : `${progress}%`,
               bottom: vertical ? `${progress}%` : "0",
+              ...alwaysPoint && { display: "inline-block"}
             }}
             onMouseDown={handleMouseDown}
           ></div>

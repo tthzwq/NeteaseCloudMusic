@@ -15,6 +15,9 @@ export default {
     extend: {
       backdropBlur: {
         xxs: '1px',
+      },
+      boxShadow: {
+        'innercard': 'inset 0px 40px 20px -20px rgba(0,0,0,0.15), inset 0px 0px 0px 1px #f2f0f2',
       }
     },
   },

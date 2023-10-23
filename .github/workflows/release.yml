@@ -77,10 +77,6 @@ jobs:
           node-version: 18
           cache: 'pnpm' # Set this to npm, yarn or pnpm.
 
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
-
       - name: Install frontend dependencies
         # If you don't have `beforeBuildCommand` configured you may want to build your frontend here too.
         run: pnpm install # Change this to npm, yarn or pnpm.

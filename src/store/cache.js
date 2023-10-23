@@ -1,4 +1,5 @@
-import { getBanners, getPersonalized } from '@/api'
+import { getBanners, getPersonalized, getRecommendSongs, getRecommendResource } from '@/api'
+import { getCookie } from '@/utils'
 import {
   createSlice,
   createAsyncThunk,
@@ -6,7 +7,9 @@ import {
 
 
 const initialState = {
+  songs: [],
   banners: [],
+  resource: [],
   personalizedPlaylist: [],
 }
 
@@ -17,6 +20,11 @@ function sleep(ms) {
 
 export const fetchRecommendData = createAsyncThunk('cache/fetchRecommendData', async () => {
   const data = {}
+  const userRecommendList = []
+  if (getCookie()) {
+    getRecommendSongs().then(res  => data['songs'] = res.data.recommend)
+    getRecommendResource().then(res => data['resource'] = res.data.recommend)
+  }
   const fetchList = [
     getBanners().then(res => data['banners'] = res.data.banners),
     getPersonalized().then(res => data['personalizedPlaylist'] = res.data.result),

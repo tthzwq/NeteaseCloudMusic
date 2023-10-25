@@ -1688,6 +1688,31 @@ pub(crate) fn index_song_url(options: Options) -> FormatParams {
     request_handler(url, "linuxapi", query_params, &cookies)
 }
 
+// #[get("/song/url/v1")]
+pub(crate) fn index_song_url_v1(options: Options) -> FormatParams {
+    let url = "https://interface.music.163.com/eapi/song/enhance/player/url/v1";
+    let query = QueryParams::from(options.params);
+    let ids = "[".to_owned() + query.value("id").unwrap() + "]";
+    let _level:&str = query.value("level").unwrap_or("standard");
+    let mut query_params = json_object!({
+        "ids": ids.as_str(),
+        "encodeType": "flac",
+        "level": _level,
+    });
+    if _level == "sky" {
+        query_params.insert("immerseType", "c51");
+    }
+    let cookies = get_cookie_string(options.cookie) + ";os=android;appver=8.10.05;";
+    let request_params = json_object!({
+        "crypto": "eapi",
+        "cookie": &cookies,
+        "proxy": "",
+        "url": "/api/song/enhance/player/url/v1",
+    });
+
+    generate_response(url, "POST", query_params, request_params)
+}
+
 // #[get("/top/album")]
 pub(crate) fn index_top_album(options: Options) -> FormatParams {
     let url = "https://music.163.com/weapi/album/new";

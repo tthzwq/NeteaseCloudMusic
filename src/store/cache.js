@@ -22,10 +22,13 @@ export const fetchRecommendData = createAsyncThunk('cache/fetchRecommendData', a
   const data = {}
   const userRecommendList = []
   if (getCookie()) {
-    getRecommendSongs().then(res  => data['songs'] = res.data.recommend)
-    getRecommendResource().then(res => data['resource'] = res.data.recommend)
+    userRecommendList.push(
+      getRecommendSongs().then(res  => data['songs'] = res.data.data.dailySongs),
+      getRecommendResource().then(res => data['resource'] = res.data.recommend)
+    )
   }
   const fetchList = [
+    ...userRecommendList,
     getBanners().then(res => data['banners'] = res.data.banners),
     getPersonalized().then(res => data['personalizedPlaylist'] = res.data.result),
   ]

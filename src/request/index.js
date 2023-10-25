@@ -34,8 +34,10 @@ async function request({
       ...(!["GET", "HEAD"].includes(method) && { body: JSON.stringify(data) }),
     })
     .then(async (response) => {
-      response.data = await response.json();
-      return response;
+      return {
+        ...response,
+        data: await response.json()
+      };
     });
 }
 

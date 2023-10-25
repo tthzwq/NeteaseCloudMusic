@@ -5,6 +5,7 @@ import { updateDB, selectDB } from "@/utils/db"
 enum KeyList {
   Cache = 'cache',
   User = 'user',
+  Player = 'player',
 }
 const keyList = Object.values(KeyList)
 

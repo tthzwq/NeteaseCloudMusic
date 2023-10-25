@@ -156,6 +156,7 @@ fn get_params(options: Options) -> FormatParams {
         "/simi/user" => music_api::index_simi_user(options),
         "/song/detail" => music_api::index_song_detail(options),
         "/song/url" => music_api::index_song_url(options),
+        "/song/url/v1" => music_api::index_song_url_v1(options),
         "/top/album" => music_api::index_top_album(options),
         "/top/artist" => music_api::index_top_artist(options),
         "/top/list" => music_api::index_top_list(options),

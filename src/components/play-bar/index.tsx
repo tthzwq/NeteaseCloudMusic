@@ -4,7 +4,7 @@ import VolumeControler from "@/components/volume-controler";
 import player, { PlayType, PlayerEvent, SongData } from "@/lib/player";
 import { useAppSelector } from "@/hooks";
 import ArtistsLink from "@/components/artists-link";
-import { formatTime } from "@/utils";
+import { formatImgUrl, formatTime } from "@/utils";
 
 const PlayBar = memo(() => {
   const repeatMode = useAppSelector((state) => state.player.repeatMode);
@@ -123,15 +123,15 @@ const SongInfo: React.FC<SongInfoProps> = memo(({ info, percent, duration }) => 
   return (
     <div className="flex items-center space-x-4">
       <div className="w-11 h-11 rounded-md bg-ctd/10 bg-[length:100%_100%] shadow-inner"
-        style={{ backgroundImage: `url("${picUrl}?param=128y128")` }}
+        style={{ backgroundImage: `url("${formatImgUrl(picUrl, 128)}")` }}
       ></div>
       <div className="">
         <div className="flex items-center">
           <div className="max-w-[160px] truncate text-base text-ct">{info?.name}</div>
           <span className="px-1">-</span>
-          <span className="text-xs text-ctd">
+          <div className="max-w-[100px] truncate text-xs text-ctd">
             <ArtistsLink list={artists} />
-          </span>
+          </div>
         </div>
         <div className="flex items-center pt-[2px] text-xs text-ctd">
           <span>{formatTime(duration * percent / 100)}</span>

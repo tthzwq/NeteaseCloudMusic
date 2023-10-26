@@ -2,6 +2,7 @@ import { Howl, Howler } from "howler";
 import mitt, { Handler } from 'mitt';
 import { PlayType, SongData, PlayerEvent, PlayerState } from "./playerType.ts";
 import { getSongUrl } from "@/api/song.js";
+import { formatImgUrl } from "@/utils/url.ts";
 
 
 
@@ -171,7 +172,7 @@ export class Player {
         title: this.current.name,
         artist: this.current.artists.map(a => a.name).join(" / "),
         album: this.current.album.name,
-        artwork: [{ src: `${this.current.album.picUrl}?param=128y128`, sizes: "128x128", }],
+        artwork: [{ src: `${formatImgUrl(this.current.album.picUrl, 128)}`, sizes: "128x128", }],
       });
     }
     const howl = this.current.howl;

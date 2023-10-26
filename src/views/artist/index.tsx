@@ -1,4 +1,5 @@
 import { getArtistInfo } from "@/api";
+import { formatImgUrl } from "@/utils";
 import React, { memo } from "react";
 import { LoaderFunctionArgs, isRouteErrorResponse, useLoaderData, useRouteError } from "react-router-dom";
 
@@ -21,7 +22,7 @@ const Artist: React.FC = memo(() => {
   return (
     <div className="px-8 py-4">
       <div className="flex space-x-8">
-        <img className="w-56 h-56 rounded-xl" src={artist.avatar} />
+        <img className="w-56 h-56 rounded-xl" src={formatImgUrl(artist.avatar, 320)} />
         <div>
           <h2 className="text-2xl font-bold">{artist.name}</h2>
         </div>

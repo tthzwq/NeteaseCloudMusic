@@ -51,8 +51,14 @@ export async function selectDB(name: string) {
   return db.select(`SELECT * from ${TABLE_Name} WHERE name = $1`, [name])
 }
 
+export async function clearDB() {
+  const db = await loadDB;
+  return db.select("DELETE FROM store")
+}
+
 export default {
   loadDB,
+  clearDB,
   insertDB,
   updateDB,
   selectAllDB,

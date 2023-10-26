@@ -33,6 +33,12 @@ const userSlice = createSlice({
     },
     setCookie(state, action: PayloadAction<string>) {
       state.cookie = action.payload;
+    },
+    loginOut(state) {
+      setCookie("");
+      state.cookie = "";
+      state.userInfo = null;
+      state.accountInfo = null;
     }
   },
   extraReducers: (builder) => {
@@ -42,7 +48,7 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUserInfo, setCookie } = userSlice.actions;
+export const { setUserInfo, setCookie, loginOut } = userSlice.actions;
 
 export const selectUserInfo = (state: RootState) => state.user.userInfo;
 

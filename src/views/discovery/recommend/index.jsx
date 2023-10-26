@@ -16,8 +16,10 @@ function Card({ info }) {
 }
 
 const Recommend = memo((props) => {
-  const { cookie } = useAppSelector((state) => state.user);
-  const { banners, personalizedPlaylist, songs, resource } = useAppSelector((state) => state.cache);
+  const cookie = useAppSelector((state) => state.user.cookie);
+  const banners = useAppSelector((state) => state.cache.banners);
+  const personalizedPlaylist = useAppSelector((state) => state.cache.personalizedPlaylist);
+  const resource = useAppSelector((state) => state.cache.resource);
 
   return (
     <div className="px-8 py-6">

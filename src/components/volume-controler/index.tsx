@@ -4,7 +4,9 @@ import player from "@/lib/player";
 import { useAppSelector } from "@/hooks";
 
 const VolumeControler: React.FC = memo(() => {
-  const { volume, mute } = useAppSelector((state) => state.player);
+  const volume = useAppSelector((state) => state.player.volume);
+  const mute = useAppSelector((state) => state.player.mute);
+
   const icon = useMemo(() => {
     if (mute) {
       return "icon-volume_cross";

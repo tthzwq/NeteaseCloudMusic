@@ -2,18 +2,13 @@ import { RouterProvider } from "react-router-dom";
 import router from "./router";
 import player, { PlayerEvent } from "@/lib/player";
 import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "@/hooks";
+import { useAppDispatch } from "@/hooks";
 import { setIndex, setPlaylist, setVolume, setMute, setRepeatMode } from "@/store/player";
 
 function App() {
-  const playerState = useAppSelector((state) => state.player);
   const dispatch = useAppDispatch();
   // init player
   useEffect(() => {
-    player.setVolume(playerState.volume);
-    player.setMute(playerState.mute);
-    player.setRepeatMode(playerState.repeatMode);
-    player.setPlaylist(playerState.playlist, playerState.index);
     const unListeners = [
       player.on(PlayerEvent.PLAY_TYPE_CHANGE, (repeatMode) => {
         dispatch(setRepeatMode(repeatMode));

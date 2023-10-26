@@ -1,33 +1,34 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import ProgressBar from "@/components/progress-bar";
 import VolumeControler from "@/components/volume-controler";
-import player, { PlayType, PlayerEvent } from "@/lib/player";
+import player, { PlayType, PlayerEvent, PlayerState } from "@/lib/player";
 import { useAppSelector } from "@/hooks";
 
 const PlayBar = memo(() => {
-  const { repeatMode } = useAppSelector((state) => state.player);
-  const [percent, setPercent] = useState(player.state.progress);
-  const [playStatus, setPlayStatus] = useState(player.state.status);
+  const repeatMode = useAppSelector((state) => state.player.repeatMode);
+  const [playState, setPlayState] = useState(player.state);
 
   useEffect(() => {
     return player.on(PlayerEvent.CHANGE, () => {
-      setPlayStatus(player.state.status)
-      setPercent(player.state.progress)
+      setPlayState(player.state)
     })
   }, []);
 
-  function handleProgressChange (percent: number) {
+  const handleProgressChange = useCallback((percent: number) => {
     player.progressTo(percent);
-  }
+  }, [])
 
-  function handlePlayTypeChange(type: PlayType) {
+  const handlePlayTypeChange = useCallback((type: PlayType) => {
     player.setRepeatMode(type);
-  }
+  }, [])
 
   return (
     <div className="w-full h-full relative">
       <div className="absolute w-full top-0 left-0">
-        <ProgressBar percent={percent} onChange={handleProgressChange} />
+        <ProgressBar percent={player.state.progress} onChange={handleProgressChange} />
+      </div>
+      <div>
+        <SongInfo info={playState} />
       </div>
       <div className="flex space-x-6 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
         <button>
@@ -37,7 +38,7 @@ const PlayBar = memo(() => {
           <i className="iconfont icon-previous text-primary text-base"></i>
         </button>
         <button className="w-12 h-12" onClick={() => player.switchPlay()}>
-          {playStatus === "playing" ? (
+          {player.state.status === "playing" ? (
             <img src="/svg/pause.svg" className="w-full h-full" />
           ) : (
             <img src="/svg/play.svg" className="w-full h-full" />
@@ -90,5 +91,21 @@ const PlayTypeIcon: React.FC<PlayTypeProps> = memo(
     );
   }
 );
+
+
+interface SongInfoProps {
+  info: PlayerState;
+}
+const SongInfo: React.FC<SongInfoProps> = memo(({ info }) => {
+  return (
+    <div className="flex items-center space-x-4">
+      <img src="/svg/album.svg" className="w-16 h-16 rounded-md" />
+      <div className="">
+        <span className="text-sm text-ct">歌曲名</span>
+        <span className="text-xs text-ct">歌手名</span>
+      </div>
+    </div>
+  )
+})
 
 export default PlayBar;

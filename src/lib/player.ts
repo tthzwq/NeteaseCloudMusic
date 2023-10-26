@@ -330,9 +330,7 @@ export class Player {
    */
   public seekTo(seekTime?: number) {
     const howl = this.getCurrentHowl();
-    if (howl && howl.playing()) {
-      howl.seek(seekTime);
-    };
+    howl && howl.seek(seekTime);
   }
   /**
    * @param progress 0-100

@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, useNavigationType } from "react-router-dom";
 
-const RouteStackControl = (props) => {
+const RouteStackControl = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const navigationType = useNavigationType();
-  const [routeStack, setRouteStack] = useState([]);
+  const [routeStack, setRouteStack] = useState([location.pathname]);
   const [routeStackIndex, setRouteStackIndex] = useState(0);
 
   // 使用 useEffect 监听路由变化
   useEffect(() => {
     if (navigationType === "PUSH") {
-      setRouteStack((prevRouteStack) => [...prevRouteStack, location.pathname]);
+      setRouteStack((prevRouteStack) => [
+        ...prevRouteStack.slice(0, prevRouteStack.length - routeStackIndex),
+        location.pathname,
+      ]);
       setRouteStackIndex(0);
     } else if (navigationType === "REPLACE") {
       setRouteStack((prevRouteStack) => [
-        ...prevRouteStack.slice(0, prevRouteStack.length - 1),
+        ...prevRouteStack.slice(0, prevRouteStack.length - routeStackIndex - 1),
         location.pathname,
       ]);
       setRouteStackIndex(0);

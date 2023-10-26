@@ -31,6 +31,7 @@ const VolumeControler: React.FC = memo(() => {
     }
   }
   function handleVolumeInput(percent: number) {
+    if (mute) player.setMute(false);
     player.setVolume(percent);
   }
   return (

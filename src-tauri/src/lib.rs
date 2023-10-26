@@ -40,6 +40,7 @@ fn get_params(options: Options) -> FormatParams {
         "/album/sub" => music_api::index_album_sub(options),
         "/album/sublist" => music_api::index_album_sublist(options),
         "/album" => music_api::index_album(options),
+        "/artist/detail" => music_api::index_artist_detail(options),
         "/artist/album" => music_api::index_artist_album(options),
         "/artist/desc" => music_api::index_artist_desc(options),
         "/artist/list" => music_api::index_artist_list(options),

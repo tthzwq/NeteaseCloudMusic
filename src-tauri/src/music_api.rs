@@ -108,6 +108,21 @@ pub(crate) fn index_album(options: Options) -> FormatParams {
     empty_query_params_handler(url, "weapi", options.cookie)
 }
 
+// #[get("/artist/detail")]
+pub(crate) fn index_artist_detail(options: Options) -> FormatParams {
+    let query_string = QueryParams::from(options.params);
+    let id = query_string.value("id").unwrap();
+    let url = &format!(
+        "https://music.163.com/api/artist/head/info/get?id={}",
+        id
+    );
+    let query_params = json_object!({
+        "id": id
+    });
+    let cookies = get_cookie_string(options.cookie);
+    request_handler(url, "weapi", query_params, &cookies)
+}
+
 // #[get("/artist/album")]
 pub(crate) fn index_artist_album(options: Options) -> FormatParams {
     let query_string = QueryParams::from(options.params);
@@ -1214,7 +1229,7 @@ pub(crate) fn index_playlist_desc_update(options: Options) -> FormatParams {
 
 // #[get("/playlist/detail")]
 pub(crate) fn index_playlist_detail(options: Options) -> FormatParams {
-    let url = "https://music.163.com/weapi/v3/playlist/detail";
+    let url = "https://music.163.com/api/v6/playlist/detail";
     let query = QueryParams::from(options.params);
     let query_params = json_object!({
         "id": query.value("id").unwrap(),

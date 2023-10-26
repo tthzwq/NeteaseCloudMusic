@@ -144,6 +144,7 @@ export class Player {
         time: 0,
       }
     });
+    this._index = -1;
     this.setIndex(index, autoplay)
   }
 
@@ -170,7 +171,7 @@ export class Player {
         title: this.current.name,
         artist: this.current.artists.map(a => a.name).join(" / "),
         album: this.current.album.name,
-        artwork: [{ src: this.current.album.picUrl }],
+        artwork: [{ src: `${this.current.album.picUrl}?param=128y128`, sizes: "128x128", }],
       });
     }
     const howl = this.current.howl;
@@ -178,8 +179,8 @@ export class Player {
     this.initListeners(howl);
 
     this.status = "none";
-    this._duration = this.current.time ? this.current.time / 1000 : 0;
-    this._progress = 0;
+    this.duration = this.current.time ? this.current.time / 1000 : 0;
+    this.progress = 0;
     if (autoplay) {
       this.play();
     }

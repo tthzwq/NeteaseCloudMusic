@@ -44,6 +44,16 @@ const router = createBrowserRouter([
     ],
   },
   {
+    path: "/artist/:id",
+    element: <Layout />,
+    children: [
+      {
+        index: true,
+        lazy: () => import("@/views/artist/index.tsx"),
+      },
+    ],
+  },
+  {
     path: "/login",
     lazy: () => import("@/views/login/index.jsx"),
   }

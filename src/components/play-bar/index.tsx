@@ -1,17 +1,32 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
 import ProgressBar from "@/components/progress-bar";
 import VolumeControler from "@/components/volume-controler";
-import player, { PlayType, PlayerEvent, PlayerState } from "@/lib/player";
+import player, { PlayType, PlayerEvent, SongData } from "@/lib/player";
 import { useAppSelector } from "@/hooks";
+import ArtistsLink from "@/components/artists-link";
+import { formatTime } from "@/utils";
 
 const PlayBar = memo(() => {
   const repeatMode = useAppSelector((state) => state.player.repeatMode);
-  const [playState, setPlayState] = useState(player.state);
+  const [percent, setpercent] = useState(player.state.progress);
+  const [songData, setSongData] = useState(player.current);
+  const [duration, setDuration] = useState(player.duration);
 
   useEffect(() => {
-    return player.on(PlayerEvent.CHANGE, () => {
-      setPlayState(player.state)
-    })
+    const unListeners = [
+      player.on(PlayerEvent.PROGRESS_CHANGE, (progress) => {
+        setpercent(progress as number)
+      }),
+      player.on(PlayerEvent.INDEX_CHANGE, (index) => {
+        setSongData(player.current)
+      }),
+      player.on(PlayerEvent.DURATION_CHANGE, (duration) => {
+        setDuration(duration as number)
+      })
+    ]
+    return () => {
+      unListeners.forEach(unListener => unListener())
+    }
   }, []);
 
   const handleProgressChange = useCallback((percent: number) => {
@@ -25,11 +40,15 @@ const PlayBar = memo(() => {
   return (
     <div className="w-full h-full relative">
       <div className="absolute w-full top-0 left-0">
-        <ProgressBar percent={player.state.progress} onChange={handleProgressChange} />
+        <ProgressBar percent={percent} onChange={handleProgressChange} />
       </div>
-      <div>
-        <SongInfo info={playState} />
-      </div>
+      {
+        songData && (
+          <div className="absolute left-3 top-1/2 -translate-y-1/2">
+            <SongInfo info={songData} percent={percent} duration={duration} />
+          </div>
+        )
+      }
       <div className="flex space-x-6 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
         <button>
           <i className="iconfont icon-like_full text-primary text-xl"></i>
@@ -94,15 +113,31 @@ const PlayTypeIcon: React.FC<PlayTypeProps> = memo(
 
 
 interface SongInfoProps {
-  info: PlayerState;
+  info: SongData;
+  percent: number;
+  duration: number;
 }
-const SongInfo: React.FC<SongInfoProps> = memo(({ info }) => {
+const SongInfo: React.FC<SongInfoProps> = memo(({ info, percent, duration }) => {
+  const artists = info?.artists || [];
+  const picUrl = info?.album?.picUrl;
   return (
     <div className="flex items-center space-x-4">
-      <img src="/svg/album.svg" className="w-16 h-16 rounded-md" />
+      <div className="w-11 h-11 rounded-md bg-ctd/10 bg-[length:100%_100%] shadow-inner"
+        style={{ backgroundImage: `url("${picUrl}?param=128y128")` }}
+      ></div>
       <div className="">
-        <span className="text-sm text-ct">歌曲名</span>
-        <span className="text-xs text-ct">歌手名</span>
+        <div className="flex items-center">
+          <div className="max-w-[160px] truncate text-base text-ct">{info?.name}</div>
+          <span className="px-1">-</span>
+          <span className="text-xs text-ctd">
+            <ArtistsLink list={artists} />
+          </span>
+        </div>
+        <div className="flex items-center pt-[2px] text-xs text-ctd">
+          <span>{formatTime(duration * percent / 100)}</span>
+          <span className="px-1">/</span>
+          <span>{formatTime(duration)}</span>
+        </div>
       </div>
     </div>
   )

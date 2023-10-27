@@ -1943,7 +1943,7 @@ dependencies = [
 
 [[package]]
 name = "netease-cloud-music"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
  "base64 0.21.4",
  "hex",
